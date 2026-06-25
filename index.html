@@ -301,7 +301,7 @@ footer{background:var(--bg);border-top:1px solid var(--rule);padding:28px 64px;d
       <p class="form-note en">All conversations are confidential. Psychological coaching and diagnostics &#8211; not a substitute for psychotherapy.</p>
     </div>
     <div class="kontakt-right">
-      <form class="kontakt-form" id="contactForm" onsubmit="handleSubmit(event)">
+      <form class="kontakt-form" id="contactForm" action="https://formspree.io/f/xnjkplwa" method="POST" onsubmit="handleSubmit(event)">
         <div class="form-group"><label><span class="de">Name *</span><span class="en">Name *</span></label><input type="text" name="name" required></div>
         <div class="form-group"><label><span class="de">E-Mail *</span><span class="en">Email *</span></label><input type="email" name="email" required></div>
         <div class="form-group"><label><span class="de">Unternehmen</span><span class="en">Organisation</span></label><input type="text" name="company"></div>
@@ -333,7 +333,17 @@ function toggleLang(){var b=document.body;if(b.classList.contains('lang-de')){b.
 function openModal(n){document.getElementById('modal-'+n).classList.add('active');document.body.style.overflow='hidden'}
 function closeModal(n){document.getElementById('modal-'+n).classList.remove('active');document.body.style.overflow=''}
 document.querySelectorAll('.modal-overlay').forEach(function(el){el.addEventListener('click',function(e){if(e.target===el){el.classList.remove('active');document.body.style.overflow=''}})})
-function handleSubmit(e){e.preventDefault();document.getElementById('contactForm').style.display='none';document.getElementById('formSuccess').style.display='block'}
+function handleSubmit(e){
+  e.preventDefault();
+  var form = document.getElementById('contactForm');
+  var data = new FormData(form);
+  fetch(form.action, {method:'POST', body:data, headers:{'Accept':'application/json'}})
+    .then(function(r){
+      if(r.ok){form.style.display='none';document.getElementById('formSuccess').style.display='block'}
+      else{alert('Es gab einen Fehler. Bitte versuchen Sie es erneut.')}
+    })
+    .catch(function(){alert('Es gab einen Fehler. Bitte versuchen Sie es erneut.')})
+}
 </script>
 </body>
 </html>
